@@ -4,6 +4,10 @@
 
 Built on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) for seamless integration with Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 
+<a href="https://glama.ai/mcp/servers/bamwor-dev/bamwor-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/bamwor-dev/bamwor-mcp-server/badge" alt="bamwor-mcp-server MCP server" />
+</a>
+
 ## Why Bamwor?
 
 | Source | Cities | Countries | Multilingual | API |
