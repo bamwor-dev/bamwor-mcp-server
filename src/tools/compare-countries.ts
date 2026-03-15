@@ -3,8 +3,8 @@ import { apiClient } from '../lib/api-client.js';
 import type { Country } from '../lib/types.js';
 
 export const compareCountriesSchema = {
-  country_a: z.string().min(1).describe('First country name or slug (e.g. "brazil", "Japan")'),
-  country_b: z.string().min(1).describe('Second country name or slug (e.g. "argentina", "South Korea")'),
+  country_a: z.string().min(1).max(100).describe('First country name or slug (e.g. "brazil", "Japan")'),
+  country_b: z.string().min(1).max(100).describe('Second country name or slug (e.g. "argentina", "South Korea")'),
 };
 
 export async function compareCountries({

@@ -27,6 +27,17 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  process.stderr.write(`Fatal error: ${error}\n`);
+  const message = error instanceof Error ? error.message : String(error);
+  const stack = error instanceof Error ? error.stack : '';
+  process.stderr.write(`Fatal error: ${message}\n`);
+  if (stack) process.stderr.write(`${stack}\n`);
   process.exit(1);
 });
+
+/**
+ * Smithery sandbox entry point — allows Smithery to scan
+ * server capabilities without real credentials.
+ */
+export function createSandboxServer() {
+  return createServer();
+}
