@@ -5,75 +5,64 @@ import { searchCitiesSchema, searchCities } from './tools/search-cities.js';
 import { listCitiesByCountrySchema, listCitiesByCountry } from './tools/list-cities-by-country.js';
 import { compareCountriesSchema, compareCountries } from './tools/compare-countries.js';
 
+/**
+ * Wraps a tool handler to catch errors and return them as MCP-compliant
+ * error content instead of crashing the server.
+ */
+function safeTool(fn: (args: any) => Promise<string>) {
+  return async (args: any) => {
+    try {
+      const text = await fn(args);
+      return { content: [{ type: 'text' as const, text }] };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      return {
+        content: [{ type: 'text' as const, text: `Error: ${message}` }],
+        isError: true as const,
+      };
+    }
+  };
+}
+
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'bamwor-world-data',
-    version: '0.1.0',
+    version: '0.1.2',
   });
 
-  /* ------------------------------------------------------------------ */
-  /*  Tool 1: get_country                                                */
-  /* ------------------------------------------------------------------ */
   server.tool(
     'get_country',
     'Get detailed data about a country by name, slug, or ISO code. Returns population, area, capital, region, coordinates, and 20+ statistics.',
     getCountrySchema,
-    async (args) => {
-      const text = await getCountry(args);
-      return { content: [{ type: 'text' as const, text }] };
-    },
+    safeTool(getCountry),
   );
 
-  /* ------------------------------------------------------------------ */
-  /*  Tool 2: search_countries                                           */
-  /* ------------------------------------------------------------------ */
   server.tool(
     'search_countries',
     'Search for countries by name or keyword, with optional region filter. Returns a list of matching countries with basic data.',
     searchCountriesSchema,
-    async (args) => {
-      const text = await searchCountries(args);
-      return { content: [{ type: 'text' as const, text }] };
-    },
+    safeTool(searchCountries),
   );
 
-  /* ------------------------------------------------------------------ */
-  /*  Tool 3: search_cities                                              */
-  /* ------------------------------------------------------------------ */
   server.tool(
     'search_cities',
     'Search for cities worldwide by name. Returns matching cities from a database of 13.4M cities with population and country.',
     searchCitiesSchema,
-    async (args) => {
-      const text = await searchCities(args);
-      return { content: [{ type: 'text' as const, text }] };
-    },
+    safeTool(searchCities),
   );
 
-  /* ------------------------------------------------------------------ */
-  /*  Tool 4: list_cities_by_country                                     */
-  /* ------------------------------------------------------------------ */
   server.tool(
     'list_cities_by_country',
     'List cities in a specific country, sorted by population or name. Supports minimum population filter. Covers 13.4M cities globally.',
     listCitiesByCountrySchema,
-    async (args) => {
-      const text = await listCitiesByCountry(args);
-      return { content: [{ type: 'text' as const, text }] };
-    },
+    safeTool(listCitiesByCountry),
   );
 
-  /* ------------------------------------------------------------------ */
-  /*  Tool 5: compare_countries                                          */
-  /* ------------------------------------------------------------------ */
   server.tool(
     'compare_countries',
     'Compare two countries side by side across all available metrics: population, area, GDP, HDI, life expectancy, and more.',
     compareCountriesSchema,
-    async (args) => {
-      const text = await compareCountries(args);
-      return { content: [{ type: 'text' as const, text }] };
-    },
+    safeTool(compareCountries),
   );
 
   return server;

@@ -3,7 +3,7 @@ import { apiClient } from '../lib/api-client.js';
 import type { SearchResult } from '../lib/types.js';
 
 export const searchCitiesSchema = {
-  query: z.string().min(2).describe('City name or partial name to search for (min 2 characters)'),
+  query: z.string().min(2).max(200).describe('City name or partial name to search for (min 2 characters)'),
   limit: z.number().min(1).max(50).default(20).describe('Maximum results to return (1-50, default 20)'),
 };
 

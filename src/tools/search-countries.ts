@@ -3,7 +3,7 @@ import { apiClient } from '../lib/api-client.js';
 import type { SearchResult } from '../lib/types.js';
 
 export const searchCountriesSchema = {
-  query: z.string().min(1).describe('Search term (country name, partial name, or keyword)'),
+  query: z.string().min(1).max(200).describe('Search term (country name, partial name, or keyword)'),
   limit: z.number().min(1).max(50).default(25).describe('Maximum results to return (1-50, default 25)'),
 };
 

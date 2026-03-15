@@ -3,8 +3,8 @@ import { apiClient } from '../lib/api-client.js';
 import type { City } from '../lib/types.js';
 
 export const listCitiesByCountrySchema = {
-  country: z.string().min(1).describe('Country name or slug (e.g. "brazil", "Japan", "united-states")'),
-  min_population: z.number().optional().describe('Minimum population filter (e.g. 1000000 for cities above 1M)'),
+  country: z.string().min(1).max(100).describe('Country name or slug (e.g. "brazil", "Japan", "united-states")'),
+  min_population: z.number().min(0).max(2_000_000_000).optional().describe('Minimum population filter (e.g. 1000000 for cities above 1M)'),
   limit: z.number().min(1).max(50).default(25).describe('Maximum results to return (1-50, default 25)'),
   sort: z.enum(['population', 'name']).default('population').describe('Sort order: "population" (default, descending) or "name" (ascending)'),
 };

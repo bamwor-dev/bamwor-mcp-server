@@ -3,15 +3,16 @@ import { apiClient } from '../lib/api-client.js';
 import type { Country } from '../lib/types.js';
 
 export const getCountrySchema = {
-  query: z.string().min(1).describe(
+  query: z.string().min(1).max(100).describe(
     'Country name (e.g. "Brazil"), slug (e.g. "brazil"), or ISO code (e.g. "BR")'
   ),
 };
 
 export async function getCountry({ query }: { query: string }): Promise<string> {
-  const slug = query.length <= 3
-    ? query.toLowerCase()
-    : query.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const sanitized = query.trim().slice(0, 100);
+  const slug = sanitized.length <= 3
+    ? sanitized.toLowerCase()
+    : sanitized.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
   try {
     const response = await apiClient.get<Country>(`/countries/${encodeURIComponent(slug)}`);

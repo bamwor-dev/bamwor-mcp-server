@@ -65,7 +65,19 @@ class BamworApiClient {
       headers['X-API-Key'] = this.apiKey;
     }
 
-    const res = await fetch(url.toString(), { headers, signal: AbortSignal.timeout(15_000) });
+    const timeoutMs = Number(process.env.BAMWOR_REQUEST_TIMEOUT) || 15_000;
+    let res: Response;
+    try {
+      res = await fetch(url.toString(), { headers, signal: AbortSignal.timeout(timeoutMs) });
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'TimeoutError') {
+        throw new Error(`Request to Bamwor API timed out after ${timeoutMs}ms for ${cleanPath}. Check network connectivity or increase BAMWOR_REQUEST_TIMEOUT.`);
+      }
+      if (err instanceof TypeError) {
+        throw new Error(`Network error reaching Bamwor API at ${this.baseUrl}: ${(err as Error).message}. Check internet connection.`);
+      }
+      throw new Error(`Unexpected error calling Bamwor API: ${(err as Error).message}`);
+    }
 
     if (!res.ok) {
       let errorBody: ApiError | null = null;
@@ -79,10 +91,16 @@ class BamworApiClient {
       const message = errorBody?.error?.message || `API request failed with status ${res.status}`;
 
       if (res.status === 401) {
-        throw new Error(`Authentication error: ${message}. Get a free API key at https://bamwor.com/developers/quickstart`);
+        throw new Error(`Authentication error (${code}): ${message}. Get a free API key at https://bamwor.com/developers/quickstart`);
       }
       if (res.status === 429) {
-        throw new Error(`Rate limit exceeded: ${message}. Upgrade your plan at https://bamwor.com/developers/pricing`);
+        throw new Error(`Rate limit exceeded (${code}): ${message}. Upgrade your plan at https://bamwor.com/developers/pricing`);
+      }
+      if (res.status === 404) {
+        throw new Error(`Not found (${code}): ${message} — path: ${cleanPath}`);
+      }
+      if (res.status >= 500) {
+        throw new Error(`Bamwor API server error (${code}): ${message}. The service may be temporarily unavailable.`);
       }
       throw new Error(`Bamwor API error [${code}]: ${message}`);
     }
