@@ -144,7 +144,7 @@ Data sourced from CIA World Factbook, GeoNames, UNDP, and World Bank.
 - [Get Free API Key](https://bamwor.com/en/developers/quickstart)
 - [API Playground](https://bamwor.com/en/developers/playground)
 - [Pricing](https://bamwor.com/en/developers/pricing)
-- [GitHub](https://github.com/en/bamwor-dev/bamwor-mcp-server)
+- [GitHub](https://github.com/bamwor-dev/bamwor-mcp-server)
 
 ## License
 
