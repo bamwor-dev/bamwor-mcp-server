@@ -57,7 +57,7 @@ Add to your MCP settings:
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `BAMWOR_API_KEY` | No | (anonymous) | API key for full access. Get one free at [bamwor.com/developers/en/quickstart](https://bamwor.com/en/developers/quickstart) |
+| `BAMWOR_API_KEY` | No | (anonymous) | API key for full access. Get one free at [bamwor.com/en/developers/quickstart](https://bamwor.com/en/developers/quickstart) |
 | `BAMWOR_API_URL` | No | `https://bamwor.com/api/v1` | API base URL override |
 | `BAMWOR_REQUEST_TIMEOUT` | No | `15000` | Request timeout in ms |
 
