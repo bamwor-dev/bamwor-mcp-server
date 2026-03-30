@@ -1,27 +1,25 @@
 # bamwor-mcp-server
 
-**World Geographic Data for AI Agents** — MCP server providing structured access to 261 countries and 13.4M cities worldwide.
+MCP Server for world geographic data — 261 countries, 13.4M cities. Connect AI agents to real country and city data.
 
-Built on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) for seamless integration with Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
-
-## Why Bamwor?
-
-| Source | Cities | Countries | Multilingual | API |
-|--------|--------|-----------|-------------|-----|
-| REST Countries | 0 | 250 | Yes | Free |
-| CountryStateCity | 151K | 250 | No | No |
-| API Ninjas | 5M | — | No | Paid |
-| **Bamwor** | **13.4M** | **261** | **4 languages** | **Free + Paid** |
+Works with **Claude Desktop**, **Cursor**, **Windsurf**, and any MCP-compatible client.
 
 ## Quick Start
 
-### 1. Get a free API key
+```bash
+npx bamwor-mcp-server
+```
 
-Register at [bamwor.com/developers/quickstart](https://bamwor.com/developers/quickstart) — takes 30 seconds.
+Or install globally:
 
-### 2. Configure your MCP client
+```bash
+npm install -g bamwor-mcp-server
+bamwor-mcp-server
+```
 
-#### Claude Desktop
+## Configuration
+
+### Claude Desktop
 
 Add to your `claude_desktop_config.json`:
 
@@ -32,14 +30,14 @@ Add to your `claude_desktop_config.json`:
       "command": "npx",
       "args": ["-y", "bamwor-mcp-server"],
       "env": {
-        "BAMWOR_API_KEY": "bw_live_your_key_here"
+        "BAMWOR_API_KEY": "your_api_key"
       }
     }
   }
 }
 ```
 
-#### Cursor / Windsurf
+### Cursor / Windsurf
 
 Add to your MCP settings:
 
@@ -49,93 +47,104 @@ Add to your MCP settings:
     "command": "npx",
     "args": ["-y", "bamwor-mcp-server"],
     "env": {
-      "BAMWOR_API_KEY": "bw_live_your_key_here"
+      "BAMWOR_API_KEY": "your_api_key"
     }
   }
 }
 ```
 
-### 3. Start using it
+### Environment Variables
 
-Ask your AI assistant things like:
-- "What is the population of Brazil?"
-- "List the 10 largest cities in India"
-- "Compare Japan and South Korea"
-- "Search for cities named Springfield"
-- "Which countries are in Africa?"
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `BAMWOR_API_KEY` | No | (anonymous) | API key for full access. Get one free at [bamwor.com/developers/quickstart](https://bamwor.com/developers/quickstart) |
+| `BAMWOR_API_URL` | No | `https://bamwor.com/api/v1` | API base URL override |
+| `BAMWOR_REQUEST_TIMEOUT` | No | `15000` | Request timeout in ms |
 
-## Available Tools
+## Available Tools (8)
 
-### `get_country`
-Get detailed data about a country including population, area, capital, region, coordinates, and 20+ statistics.
+### get_country
 
-**Input:** `{ query: "Brazil" }` — accepts name, slug, or ISO code
+Get detailed data about a country by name, slug, or ISO code. Returns population, area, capital, region, coordinates, and 20+ statistics.
 
-### `search_countries`
-Search for countries by name or keyword with optional region filter.
-
-**Input:** `{ query: "south", region: "Americas", limit: 10 }`
-
-### `search_cities`
-Search for cities worldwide by name from a database of 13.4M cities.
-
-**Input:** `{ query: "Tokyo", limit: 10 }`
-
-### `list_cities_by_country`
-List cities in a specific country, sorted by population or name.
-
-**Input:** `{ country: "germany", min_population: 500000, limit: 20 }`
-
-### `compare_countries`
-Compare two countries side by side across all available metrics.
-
-**Input:** `{ country_a: "France", country_b: "Germany" }`
-
-## Docker (Isolated Setup)
-
-For containerized deployment:
-
-```bash
-cd mcp/
-cp .env.example .env
-# Edit .env and add your BAMWOR_API_KEY
-
-docker compose build
-docker compose run --rm -i bamwor-mcp
+```
+Input: { "query": "Japan" }
 ```
 
-The Docker setup is **100% isolated** — it creates its own network, exposes no ports, shares no volumes, and communicates only via the public Bamwor API over HTTPS.
+### search_countries
 
-## Environment Variables
+Search for countries by name or keyword. Returns matching countries with basic data.
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `BAMWOR_API_KEY` | Yes | Your Bamwor API key |
-| `BAMWOR_API_URL` | No | Override API URL (default: `https://bamwor.com/api/v1`) |
+```
+Input: { "query": "south", "limit": 10 }
+```
 
-## Rate Limits
+### search_cities
 
-Depends on your API plan:
+Search for cities worldwide by name from a database of 13.4M cities.
 
-| Plan | Requests/min | Requests/day | Price |
-|------|-------------|-------------|-------|
-| Free | 30 | 1,000 | $0 |
-| Pro | 60 | 10,000 | $19.99/mo |
-| Premium | 300 | 50,000 | $39.99/mo |
+```
+Input: { "query": "Tokyo", "limit": 5 }
+```
 
-Register for a free key at [bamwor.com/developers/quickstart](https://bamwor.com/developers/quickstart).
+### list_cities_by_country
 
-## Data Sources
+List cities in a specific country, sorted by population or name. Supports minimum population filter.
 
-- **Countries:** CIA World Factbook, UN, World Bank — 261 countries and territories
-- **Cities:** GeoNames — 13.4M populated places with coordinates, population, timezone, elevation
-- **Statistics:** 20+ metrics per country (GDP, HDI, life expectancy, literacy, and more)
+```
+Input: { "country": "brazil", "min_population": 1000000, "limit": 10 }
+```
+
+### compare_countries
+
+Compare two countries side by side across all available metrics: population, area, GDP, HDI, life expectancy, and more.
+
+```
+Input: { "country_a": "France", "country_b": "Germany" }
+```
+
+### get_rankings
+
+Get country rankings by metric. Available metrics: population, area, gdp, hdi, life-expectancy, and 9 Bamwor proprietary indices (ibeu, ibcp, ibda, ibcx, ibee, ibfm, ibdi, ibed, ibsa). Omit metric to list all available.
+
+```
+Input: { "metric": "population", "limit": 10, "countries_only": true }
+```
+
+### get_city
+
+Get detailed information about a specific city by its GeoNames ID. Returns coordinates, population, elevation, timezone, and province.
+
+```
+Input: { "city_id": 1850147 }
+```
+
+### get_nearby_cities
+
+Find cities near a specific city using PostGIS radius search. Returns nearby cities with distance in km.
+
+```
+Input: { "city_id": 1850147, "radius": 50, "limit": 10 }
+```
+
+## Data Coverage
+
+- **261 countries and territories** with 20+ statistics each
+- **13.4 million cities** with coordinates, population, elevation, timezone
+- **9 proprietary indices** (IBEU, IBCP, IBDA, IBCX, IBEE, IBFM, IBDI, IBED, IBSA)
+- **Rankings** by any metric
+- **Country comparisons** — 67,860 combinations
+- **4 languages** — English, Spanish, Portuguese, Italian
+
+Data sourced from CIA World Factbook, GeoNames, UNDP, and World Bank.
 
 ## Links
 
-- [Bamwor API Documentation](https://bamwor.com/en/developers/docs)
-- [API Pricing](https://bamwor.com/en/developers/pricing)
-- [Bamwor Website](https://bamwor.com)
+- [API Documentation](https://bamwor.com/developers/docs)
+- [Get Free API Key](https://bamwor.com/developers/quickstart)
+- [API Playground](https://bamwor.com/developers/playground)
+- [Pricing](https://bamwor.com/developers/pricing)
+- [GitHub](https://github.com/bamwor-dev/bamwor-mcp-server)
 
 ## License
 

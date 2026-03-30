@@ -30,7 +30,7 @@ function safeTool(fn: (args: any) => Promise<string>) {
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'bamwor-world-data',
-    version: '0.2.0',
+    version: '0.2.1',
   });
 
   server.tool(
