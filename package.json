@@ -1,6 +1,6 @@
 {
   "name": "bamwor-mcp-server",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "mcpName": "io.github.bamwor-dev/bamwor-mcp-server",
   "description": "MCP server for world geographic data — 261 countries, 13.4M cities. Powered by Bamwor.",
   "keywords": [
@@ -17,7 +17,7 @@
   ],
   "author": "Bamwor",
   "license": "MIT",
-  "homepage": "https://bamwor.com/developers/mcp",
+  "homepage": "https://bamwor.com/en/developers/mcp",
   "repository": {
     "type": "git",
     "url": "https://github.com/bamwor-dev/bamwor-mcp-server"
