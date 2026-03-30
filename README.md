@@ -17,6 +17,10 @@ npm install -g bamwor-mcp-server
 bamwor-mcp-server
 ```
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/bamwor-dev-bamwor-mcp-server).
+
 ## Configuration
 
 ### Claude Desktop
